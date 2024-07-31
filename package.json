@@ -1,0 +1,53 @@
+{
+  "name": "react-native-paper-phone-input",
+  "version": "1.0.1",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rohitrehan/react-native-paper-phone-input.git"
+  },
+  "scripts": {
+    "tsc": "tsc --noEmit",
+    "build": "rimraf lib && npx tsc ",
+    "lint": "eslint .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.8.0",
+    "@types/google-libphonenumber": "^7.4.30",
+    "@types/react-test-renderer": "^18.3.0",
+    "eslint": "^9.8.0",
+    "eslint-plugin-react": "^7.35.0",
+    "globals": "^15.8.0",
+    "husky": "^9.1.4",
+    "react": "^18.2.0",
+    "react-native": "^0.74.3",
+    "react-native-paper": "^5.12.5",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^7.18.0"
+  },
+  "dependencies": {
+    "@rohitrehan/react-native-country-picker-modal": "^2.0.2",
+    "google-libphonenumber": "^3.2.38"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && npm run tsc"
+    }
+  },
+  "keywords": [
+    "react",
+    "react-native",
+    "react-native-paper",
+    "components",
+    "phone-input"
+  ],
+  "author": "Rohit Rehan <rohitrehan@gmail.com> (https://rohitrehan.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rohitrehan/react-native-paper-phone-input/issues"
+  },
+  "homepage": "https://github.com/rohitrehan/react-native-paper-phone-input"
+}
