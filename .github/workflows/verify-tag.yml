@@ -19,9 +19,10 @@ jobs:
         with:
           node-version: 20
       - run: |
-          TAG="$(jq -r .version package.json)"
+          TAG=$(jq -r .version package.json)
           if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
-            core.setFailed("Tag $TAG exists. Kindly update the version")
+            echo "Tag $TAG exists. Kindly update the version"
+            exit 1
           fi
       - run: npm install
       - run: npm test
