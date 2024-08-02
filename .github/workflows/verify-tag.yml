@@ -1,0 +1,28 @@
+
+name: Verify Tag
+run-name: verify-tag
+
+on:
+  push: 
+    branches: 
+      - '*'         # matches every branch that doesn't contain a '/'
+      - '*/*'       # matches every branch containing a single '/'
+      - '**'        # matches every branch
+      - '!master'   # excludes master
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: |
+          TAG=$(jq -r .version package.json)
+          if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
+            echo "Tag $TAG exists. Kindly update the version"
+            exit 1
+          fi
+      - run: npm install --legacy-peer-deps
+      - run: npm test
