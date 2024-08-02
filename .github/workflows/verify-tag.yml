@@ -11,7 +11,7 @@ on:
       - '!master'   # excludes master
 
 jobs:
-  build:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,7 +21,7 @@ jobs:
       - run: |
           TAG="$(jq -r .version package.json)"
           if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
-            core.setFailed("Tag ${TAG} exists. Kindly update the version")
+            core.setFailed("Tag $TAG exists. Kindly update the version")
           fi
       - run: npm install
       - run: npm test
