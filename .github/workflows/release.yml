@@ -19,7 +19,7 @@ jobs:
           node-version: 20
       - run: |
           TAG=$(jq -r .version package.json)
-          if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
+          if git show-ref --tags --verify --quiet "refs/tags/v${TAG}"; then
             echo "Tag $TAG exists. Kindly update the version"
             exit 1
           fi
