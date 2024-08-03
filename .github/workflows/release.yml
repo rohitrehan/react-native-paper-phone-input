@@ -10,25 +10,19 @@ on:
       - master
 
 jobs:
-  verify-tag:
+  verify-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: |
-          TAG=$(jq -r .version package.json)
-          if git show-ref --tags --verify --quiet "refs/tags/v${TAG}"; then
-            echo "Tag $TAG exists. Kindly update the version"
-            exit 1
-          fi
       - run: npm install --legacy-peer-deps
       - run: npm test
 
   build-and-release:
     runs-on: ubuntu-latest
-    needs: verify-tag
+    needs: verify-tests
 
     steps:
       - name: Checkout code
@@ -72,4 +66,3 @@ jobs:
           tag: v${{ env.VERSION }}
           overwrite: true
           body: "${{ env.ASSET_NAME }} ${{ env.VERSION }}"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
