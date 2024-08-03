@@ -1,0 +1,86 @@
+name: Create Release on PR Merge to Master
+
+on:
+  pull_request: 
+    branches: master
+    types: [closed]
+  push:
+    branches:
+      - '*'
+      - master
+
+jobs:
+  verify-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: |
+          TAG=$(jq -r .version package.json)
+          if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
+            echo "Tag $TAG exists. Kindly update the version"
+            exit 1
+          fi
+      - run: npm install --legacy-peer-deps
+      - run: npm test
+
+  build-and-release:
+    runs-on: ubuntu-latest
+    needs: verify-tag
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Build the project
+        run: npm run build
+
+      - name: Get the version from package.json
+        id: get_version
+        run: |
+          VERSION=$(jq -r .version package.json)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          NAME=$(jq -r .name package.json)
+          echo "PACKAGE_NAME=${NAME}" >> $GITHUB_ENV
+
+      - name: Create a tag
+        run: |
+          git tag v${{ env.VERSION }}
+          git push origin v${{ env.VERSION }}
+
+      - name: Create a .tgz package
+        run: |
+          # npm pack --pack-destination ./lib
+          tar -czvf ${{ env.PACKAGE_NAME }}-v${{ env.VERSION }}.tgz -C lib .
+
+      - name: Create GitHub release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.VERSION }}
+          release_name: v${{ env.VERSION }}
+          body: "Release v${{ env.VERSION }}"
+          draft: false
+          prerelease: false
+
+      - name: Upload release assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./${{ env.PACKAGE_NAME }}-v${{ env.VERSION }}.tgz
+          asset_name: ${{ env.PACKAGE_NAME }}-v${{ env.VERSION }}.tgz
+          asset_content_type: application/gzip
