@@ -63,24 +63,13 @@ jobs:
           # npm pack --pack-destination ./lib
           tar -czvf ${{ env.PACKAGE_NAME }}-v${{ env.VERSION }}.tgz -C lib .
 
-      - name: Create GitHub release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: svenstaro/upload-release-action@v2
         with:
-          tag_name: v${{ env.VERSION }}
-          release_name: v${{ env.VERSION }}
-          body: "Release v${{ env.VERSION }}"
-          draft: false
-          prerelease: false
-
-      - name: Upload release assets
-        uses: actions/upload-release-asset@v1
-        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ env.PACKAGE_NAME }}-v${{ env.VERSION }}.tgz
+          asset_name:  ${{ env.PACKAGE_NAME }}-v${{ env.VERSION }}.tgz
+          tag: v${{ env.VERSION }}
+          overwrite: true
+          body: "${{ env.ASSET_NAME }} ${{ env.VERSION }}"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ env.PACKAGE_NAME }}-v${{ env.VERSION }}.tgz
-          asset_name: ${{ env.PACKAGE_NAME }}-v${{ env.VERSION }}.tgz
-          asset_content_type: application/gzip
