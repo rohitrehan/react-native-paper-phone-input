@@ -56,3 +56,4 @@ jobs:
           tag: v${{ env.VERSION }}
           overwrite: true
           body: "${{ env.ASSET_NAME }} ${{ env.VERSION }}"
+          release_name: v${{ env.VERSION }}
