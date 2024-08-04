@@ -37,11 +37,6 @@ jobs:
       - name: Build the project
         run: npm run build
 
-      - name: Create a tag
-        run: |
-          git tag v${{ env.VERSION }}
-          git push origin v${{ env.VERSION }}
-
       - name: Create a .tgz package
         run: |
           # npm pack --pack-destination ./lib
@@ -50,7 +45,7 @@ jobs:
       - name: Release
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.MY_PAT }}
           file: ${{ env.PACKAGE_NAME }}-v${{ env.VERSION }}.tgz
           asset_name: ${{ env.PACKAGE_NAME }}-v${{ env.VERSION }}.tgz
           tag: v${{ env.VERSION }}
