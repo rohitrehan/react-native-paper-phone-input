@@ -2,7 +2,7 @@ name: Create Release on PR Merge to Master
 
 on:
   pull_request:
-    branches: master
+    branches: [master]
     types: [closed]
 
 jobs:
@@ -30,6 +30,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
+
       - name: Run Tests
         run: npm test
 
