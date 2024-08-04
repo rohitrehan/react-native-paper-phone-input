@@ -9,6 +9,7 @@
 <br>
 <p align="center">
   <img src="https://github.com/rohitrehan/react-native-paper-phone-input/actions/workflows/release.yml/badge.svg" alt="build"/>
+  <img src="https://github.com/rohitrehan/react-native-paper-phone-input/actions/workflows/publish-to-npm.yml/badge.svg" alt="build"/>
   <img src="https://img.shields.io/github/issues/rohitrehan/react-native-paper-phone-input" alt="build"/>
   <img src="https://img.shields.io/github/issues-pr/rohitrehan/react-native-paper-phone-input" alt="build"/>
   <img src="http://img.shields.io/:license-mit-blue.svg?style=flat-square" alt="build"/>
