@@ -1,4 +1,4 @@
-name: Create Release on PR Merge to Master
+name: Build-Release
 
 on:
   pull_request:
