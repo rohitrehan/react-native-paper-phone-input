@@ -4,29 +4,16 @@ on:
   pull_request: 
     branches: master
     types: [closed]
-  push:
-    branches:
-      - '*'
-      - master
 
 jobs:
-  verify-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm install --legacy-peer-deps
-      - run: npm test
-
   build-and-release:
     runs-on: ubuntu-latest
-    needs: verify-tests
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -35,17 +22,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
+      - name: Run Tests
+        run: npm test
 
       - name: Build the project
         run: npm run build
-
-      - name: Get the version from package.json
-        id: get_version
-        run: |
-          VERSION=$(jq -r .version package.json)
-          echo "VERSION=${VERSION}" >> $GITHUB_ENV
-          NAME=$(jq -r .name package.json)
-          echo "PACKAGE_NAME=${NAME}" >> $GITHUB_ENV
 
       - name: Create a tag
         run: |
