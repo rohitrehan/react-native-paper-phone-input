@@ -1,8 +1,8 @@
 name: Create Release on PR Merge to Master
 
 on:
-  pull_request: 
-    branches: master
+  pull_request:
+    branches: [master]
     types: [closed]
 
 jobs:
@@ -20,8 +20,17 @@ jobs:
         with:
           node-version: 20
 
+      - name: Get the version from package.json
+        id: get_version
+        run: |
+          VERSION=$(jq -r .version package.json)
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          NAME=$(jq -r .name package.json)
+          echo "PACKAGE_NAME=${NAME}" >> $GITHUB_ENV
+
       - name: Install dependencies
         run: npm install --legacy-peer-deps
+
       - name: Run Tests
         run: npm test
 
@@ -43,7 +52,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ env.PACKAGE_NAME }}-v${{ env.VERSION }}.tgz
-          asset_name:  ${{ env.PACKAGE_NAME }}-v${{ env.VERSION }}.tgz
+          asset_name: ${{ env.PACKAGE_NAME }}-v${{ env.VERSION }}.tgz
           tag: v${{ env.VERSION }}
           overwrite: true
           body: "${{ env.ASSET_NAME }} ${{ env.VERSION }}"
