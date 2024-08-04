@@ -1,6 +1,6 @@
 
-name: Verify Tag
-run-name: verify-tag
+name: Verify Tests
+run-name: verify-tests
 
 on:
   push: 
@@ -15,14 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: |
-          TAG=$(jq -r .version package.json)
-          if git show-ref --tags --verify --quiet "refs/tags/${TAG}"; then
-            echo "Tag $TAG exists. Kindly update the version"
-            exit 1
-          fi
       - run: npm install --legacy-peer-deps
       - run: npm test
