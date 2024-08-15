@@ -1,55 +1,98 @@
 {
   "name": "react-native-paper-phone-input",
-  "version": "1.0.2",
-  "description": "",
-  "main": "lib/index.js",
+  "version": "1.0.3",
+  "main": "expo/AppEntry.js",
   "types": "lib/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rohitrehan/react-native-paper-phone-input.git"
-  },
   "scripts": {
+    "start": "npm run config:dev && expo start --reset-cache",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
     "tsc": "tsc --noEmit",
-    "build": "rimraf lib && npx tsc ",
-    "lint": "eslint .",
-    "pretest": "node ./test/check-tag.js",
-    "test": "npm run tsc && npm run pretest"
+    "build": "rimraf lib && npx tsc",
+    "lint": "expo lint",
+    "pretest": "node ./scripts/check-tag.js",
+    "test": "npm run tsc && npm run pretest",
+    "config:dev": "node ./scripts/update-package.js \"expo/AppEntry.js\"",
+    "config:npm": "node ./scripts/update-package.js \"lib/index.js\"",
+    "cleaning": "rimraf node_modules && rimraf package-lock.json && npm install && rimraf  $TMPDIR/react-*",
+    "verify": "npm run lint && npm run build && npm run test",
+    "prepublishOnly": "npm run verify && npm run config:npm",
+    "publish": "npm publish",
+    "postpublish": "npm run config:dev"
+  },
+  "dependencies": {
+    "@rohitrehan/react-native-country-picker-modal": "^2.1.4",
+    "google-libphonenumber": "^3.2.38"
   },
   "devDependencies": {
     "@actions/core": "^1.10.1",
-    "@eslint/js": "^9.8.0",
+    "@babel/core": "^7.20.0",
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.9.0",
+    "@expo/metro-runtime": "~3.2.1",
     "@types/google-libphonenumber": "^7.4.30",
+    "@types/react": "~18.2.45",
     "@types/react-test-renderer": "^18.3.0",
-    "eslint": "^9.8.0",
-    "eslint-plugin-react": "^7.35.0",
+    "eslint": "^8.57.0",
+    "eslint-config-expo": "^7.1.2",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "expo": "~51.0.26",
+    "expo-status-bar": "~1.12.1",
     "globals": "^15.8.0",
     "husky": "^9.1.4",
-    "react": "^18.2.0",
-    "react-native": "^0.74.3",
+    "prettier": "^3.3.3",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-native": "0.74.5",
     "react-native-paper": "^5.12.5",
-    "typescript": "^5.5.4",
-    "typescript-eslint": "^7.18.0"
-  },
-  "dependencies": {
-    "@rohitrehan/react-native-country-picker-modal": "^2.0.2",
-    "google-libphonenumber": "^3.2.38"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint && npm run tsc"
-    }
+    "react-native-safe-area-context": "4.10.5",
+    "react-native-web": "~0.19.10",
+    "typescript": "~5.3.3"
   },
   "keywords": [
-    "react",
     "react-native",
-    "react-native-paper",
     "components",
-    "phone-input"
+    "country-picker",
+    "phone-input",
+    "phone-number-input",
+    "country",
+    "flag"
   ],
   "author": "Rohit Rehan <rohitrehan@gmail.com> (https://rohitrehan.com/)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/rohitrehan/react-native-paper-phone-input/issues"
   },
-  "homepage": "https://github.com/rohitrehan/react-native-paper-phone-input"
+  "homepage": "http://rohitrehan.github.io/react-native-paper-phone-input",
+  "jest": {
+    "preset": "react-native",
+    "testEnvironment": "jsdom",
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "json",
+      "ts",
+      "tsx"
+    ],
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
+    },
+    "testMatch": [
+      "**/*.test.ts?(x)"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/example-expo",
+      "<rootDir>/example-slack-message"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run verify"
+    }
+  },
+  "resolutions": {
+    "mem": "^4.0.0"
+  }
 }

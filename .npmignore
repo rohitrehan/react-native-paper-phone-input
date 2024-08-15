@@ -31,6 +31,7 @@ __tests__/
 .github/
 .vscode/
 web-build/
+dist/
 lib/assets/data/countries-image.json
 .prettierrc
 lib/assets/images/icon.png
