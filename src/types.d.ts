@@ -1,11 +1,11 @@
-import { StyleProp, TextStyle, ViewStyle } from "react-native";
+import { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import {
   CallingCode,
   Country,
   CountryCode,
-} from "@rohitrehan/react-native-country-picker-modal";
-import { CountryFilterProps } from "@rohitrehan/react-native-country-picker-modal/lib/CountryFilter";
-import { TextInputProps } from "react-native-paper";
+} from '@rohitrehan/react-native-country-picker-modal';
+import { CountryFilterProps } from '@rohitrehan/react-native-country-picker-modal/lib/CountryFilter';
+import { TextInputProps } from 'react-native-paper';
 
 export interface PhoneInputProps {
   withDarkTheme?: boolean;
@@ -28,12 +28,12 @@ export interface PhoneInputProps {
   codeTextStyle?: StyleProp<TextStyle>;
   flagButtonStyle?: StyleProp<ViewStyle>;
   countryPickerButtonStyle?: StyleProp<ViewStyle>;
-  layout?: "first" | "second";
   filterProps?: CountryFilterProps;
   countryPickerProps?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
   textSelectionColor?: string;
   flagSize?: number;
   showFlag?: boolean;
+  showCountryCode?: boolean;
 }
 export interface PhoneInputState {
   code: CallingCode | undefined;

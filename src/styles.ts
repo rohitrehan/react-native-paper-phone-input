@@ -4,9 +4,9 @@ import {
   ViewStyle,
   ImageStyle,
   TextStyle,
-} from "react-native";
+} from 'react-native';
 const { width: viewportWidth, height: viewportHeight } =
-  Dimensions.get("window");
+  Dimensions.get('window');
 export function wp(percentage: number) {
   const value = (percentage * viewportWidth) / 100;
   return Math.round(value);
@@ -30,19 +30,19 @@ const styles: Styles = StyleSheet.create<Styles>({
   container: {
     width: wp(80),
     // backgroundColor: "white",
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   flagContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
   flagButtonView: {
     width: wp(25),
-    height: "100%",
+    height: '100%',
     // minWidth: 32,
-    justifyContent: "center",
-    flexDirection: "row",
-    alignItems: "center",
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   flagButtonExtraWidth: {
     // width: wp(23),
@@ -66,15 +66,15 @@ const styles: Styles = StyleSheet.create<Styles>({
     // backgroundColor: "#F8F9F9",
     // paddingHorizontal: wp(4),
     // paddingVertical: hp(2),
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   codeText: {
     // fontSize: 16,
     // marginRight: 10,
     // fontWeight: "500",
     // color: "#000000",
-    textAlign: "left",
+    textAlign: 'left',
   },
   numberText: {
     // fontSize: 16,

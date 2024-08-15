@@ -1,7 +1,23 @@
 {
   "extends": "expo/tsconfig.base",
+  "include": ["src", "typings.d.ts"],
   "compilerOptions": {
-    "jsx": "react",
-    "strict": true
-  }
+    "outDir": "./lib",
+    "module": "ES6",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": false,
+    "sourceMap": true,
+    "strict": true,
+    "removeComments": true,
+    "declaration": true
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "lib",
+    "scripts",
+    "babel.config.js",
+    "eslint.config.mjs"
+  ]
 }

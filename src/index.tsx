@@ -4,12 +4,12 @@ import React, {
   useEffect,
   useImperativeHandle,
   useState,
-} from "react";
-import { PhoneNumberUtil } from "google-libphonenumber";
-import styles from "./styles";
-import { IPhoneInput, PhoneInputProps } from "./types";
-import { Text, TextInput } from "react-native-paper";
-import { Image, TouchableOpacity, View } from "react-native";
+} from 'react';
+import { PhoneNumberUtil } from 'google-libphonenumber';
+import styles from './styles';
+import { IPhoneInput, PhoneInputProps } from './types';
+import { Text, TextInput } from 'react-native-paper';
+import { Image, TouchableOpacity, View } from 'react-native';
 import {
   CallingCode,
   Country,
@@ -20,10 +20,10 @@ import {
   DEFAULT_THEME,
   Flag,
   getCallingCode,
-} from "@rohitrehan/react-native-country-picker-modal";
+} from '@rohitrehan/react-native-country-picker-modal';
 
 const dropDown =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAi0lEQVRYR+3WuQ6AIBRE0eHL1T83FBqU5S1szdiY2NyTKcCAzU/Y3AcBXIALcIF0gRPAsehgugDEXnYQrUC88RIgfpuJ+MRrgFmILN4CjEYU4xJgFKIa1wB6Ec24FuBFiHELwIpQxa0ALUId9wAkhCnuBdQQ5ngP4I9wxXsBDyJ9m+8y/g9wAS7ABW4giBshQZji3AAAAABJRU5ErkJggg==";
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAi0lEQVRYR+3WuQ6AIBRE0eHL1T83FBqU5S1szdiY2NyTKcCAzU/Y3AcBXIALcIF0gRPAsehgugDEXnYQrUC88RIgfpuJ+MRrgFmILN4CjEYU4xJgFKIa1wB6Ec24FuBFiHELwIpQxa0ALUId9wAkhCnuBdQQ5ngP4I9wxXsBDyJ9m+8y/g9wAS7ABW4giBshQZji3AAAAABJRU5ErkJggg==';
 const phoneUtil = PhoneNumberUtil.getInstance();
 
 const PhoneInput = forwardRef<IPhoneInput, PhoneInputProps>(
@@ -44,9 +44,9 @@ const PhoneInput = forwardRef<IPhoneInput, PhoneInputProps>(
       countryPickerProps = {},
       filterProps = {},
       countryPickerButtonStyle,
-      layout = "first",
       flagSize,
       showFlag,
+      showCountryCode,
       defaultCode,
       disabled: disabledFromProps,
       value,
@@ -55,7 +55,7 @@ const PhoneInput = forwardRef<IPhoneInput, PhoneInputProps>(
       onChangeFormattedText,
       onChangeCountry,
     }: PhoneInputProps,
-    ref
+    ref,
   ) => {
     useImperativeHandle(ref, () => ({
       getCallingCode: () => code,
@@ -65,12 +65,13 @@ const PhoneInput = forwardRef<IPhoneInput, PhoneInputProps>(
           const parsedNumber = phoneUtil.parse(number, countryCode);
           return phoneUtil.isValidNumber(parsedNumber);
         } catch (err) {
+          console.warn(err);
           return false;
         }
       },
       getNumberAfterPossiblyEliminatingZero: () => {
         let num = number;
-        if (num.length > 0 && num.startsWith("0")) {
+        if (num.length > 0 && num.startsWith('0')) {
           num = num.substr(1);
           return {
             number: num,
@@ -85,12 +86,12 @@ const PhoneInput = forwardRef<IPhoneInput, PhoneInputProps>(
       },
     }));
 
-    const [code, setCode] = useState<CallingCode>(defaultCode ?? "91");
+    const [code, setCode] = useState<CallingCode>(defaultCode ?? '91');
     const [countryCode, setCountryCode] = useState<CountryCode>(
-      defaultCode ?? "IN"
+      defaultCode ?? 'IN',
     );
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [number, setNumber] = useState<string>(value ?? defaultValue ?? "");
+    const [number, setNumber] = useState<string>(value ?? defaultValue ?? '');
 
     useEffect(() => {
       if (defaultCode) {
@@ -129,7 +130,7 @@ const PhoneInput = forwardRef<IPhoneInput, PhoneInputProps>(
           }
         }
       },
-      [setNumber, onChangeFormattedText]
+      [setNumber, onChangeFormattedText, code, onChangeTextProps],
     );
 
     const renderDropdownImage = () => {
@@ -143,27 +144,22 @@ const PhoneInput = forwardRef<IPhoneInput, PhoneInputProps>(
     };
 
     const renderFlagButton = () => {
-      if (layout === "first") {
-        return (
-          <View style={styles.flagContainer}>
-            {showFlag && (
-              <Flag
-                countryCode={countryCode}
-                withFlagButton
-                flagSize={flagSize || DEFAULT_THEME.flagSize}
-              />
-            )}
-            {code && (
-              <Text
-                style={[styles.codeText, codeTextStyle ? codeTextStyle : {}]}
-              >
-                ({`+${code}`})
-              </Text>
-            )}
-          </View>
-        );
-      }
-      return <View />;
+      return (
+        <View style={styles.flagContainer}>
+          {showFlag && (
+            <Flag
+              countryCode={countryCode}
+              withFlagButton
+              flagSize={flagSize || DEFAULT_THEME.flagSize}
+            />
+          )}
+          {showCountryCode && code && (
+            <Text style={[styles.codeText, codeTextStyle ? codeTextStyle : {}]}>
+              ({`+${code}`})
+            </Text>
+          )}
+        </View>
+      );
     };
 
     return (
@@ -178,7 +174,6 @@ const PhoneInput = forwardRef<IPhoneInput, PhoneInputProps>(
           <TouchableOpacity
             style={[
               styles.flagButtonView,
-              layout === "second" ? styles.flagButtonExtraWidth : {},
               flagButtonStyle ? flagButtonStyle : {},
               countryPickerButtonStyle ? countryPickerButtonStyle : {},
             ]}
@@ -202,11 +197,6 @@ const PhoneInput = forwardRef<IPhoneInput, PhoneInputProps>(
               onClose={() => setModalVisible(false)}
               {...countryPickerProps}
             />
-            {code && layout === "second" && (
-              <Text
-                style={[styles.codeText, codeTextStyle ? codeTextStyle : {}]}
-              >{`+${code}`}</Text>
-            )}
             {!disableArrowIcon && (
               <React.Fragment>
                 {renderDropdownImageFromProps
@@ -223,12 +213,12 @@ const PhoneInput = forwardRef<IPhoneInput, PhoneInputProps>(
           >
             <TextInput
               style={[styles.numberText, textInputStyle ? textInputStyle : {}]}
-              placeholder={placeholder ? placeholder : "Phone Number"}
+              placeholder={placeholder ? placeholder : 'Phone Number'}
               onChangeText={onChangeText}
               value={number}
               editable={disabledFromProps ? false : true}
               selectionColor="black"
-              keyboardAppearance={withDarkTheme ? "dark" : "default"}
+              keyboardAppearance={withDarkTheme ? 'dark' : 'default'}
               keyboardType="number-pad"
               autoFocus={autoFocus}
               {...textInputProps}
@@ -237,8 +227,10 @@ const PhoneInput = forwardRef<IPhoneInput, PhoneInputProps>(
         </View>
       </CountryModalProvider>
     );
-  }
+  },
 );
+PhoneInput.displayName = 'PhoneInput';
+
 export default PhoneInput;
 
 export const isValidNumber = (number: string, countryCode: CountryCode) => {
@@ -246,6 +238,7 @@ export const isValidNumber = (number: string, countryCode: CountryCode) => {
     const parsedNumber = phoneUtil.parse(number, countryCode);
     return phoneUtil.isValidNumber(parsedNumber);
   } catch (err) {
+    console.warn(err);
     return false;
   }
 };
